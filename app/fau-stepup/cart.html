@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Step Up - Cart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  </head>
+  <body class="bg-gray-100">
+    <!-- Navbar -->
+    <nav class="bg-[#4527a0] text-white p-4">
+      <div class="container mx-auto flex justify-between items-center">
+        <a href="#" class="text-2xl font-bold">Step Up</a>
+        <ul class="flex space-x-6">
+          <li><a href="index.html" class="hover:underline">Home</a></li>
+          <li><a href="cart.html" class="hover:underline">Cart</a></li>
+          <li><a href="profile.html" class="hover:underline">Profile</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Cart Section -->
+    <div class="container mx-auto py-10">
+      <h2 class="text-3xl font-bold text-[#4527a0] mb-6">Your Cart</h2>
+
+      <div id="cartItems" class="space-y-6">
+        <!-- Produk yang ditambahkan ke keranjang akan ditampilkan di sini -->
+      </div>
+
+      <div class="flex justify-between items-center mt-6">
+        <p class="text-xl font-semibold">Total: <span id="totalPrice" class="text-[#4527a0]">Rp 0</span></p>
+        <button id="checkoutButton" class="px-6 py-2 bg-[#4527a0] text-white rounded-md hover:bg-[#5c38a1] transition">Proceed to Checkout</button>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-[#4527a0] text-white text-center py-4">
+      <p>&copy; 2024 Step Up. All rights reserved.</p>
+    </footer>
+
+    <script>
+      // Fungsi untuk mengambil data keranjang dari localStorage
+      function getCart() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        return cart;
+      }
+
+      // Fungsi untuk menghitung total harga keranjang
+      function updateTotal(cart) {
+        const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        document.getElementById('totalPrice').textContent = 'Rp ' + total.toLocaleString('id-ID');
+      }
+
+      // Fungsi untuk menampilkan produk dalam keranjang
+      // Fungsi untuk menampilkan produk dalam keranjang
+      function renderCart() {
+        const cartItems = getCart();
+        const cartItemsContainer = document.getElementById('cartItems');
+        cartItemsContainer.innerHTML = ''; // Kosongkan kontainer sebelum merender ulang
+
+        cartItems.forEach((item) => {
+          const cartItemElement = document.createElement('div');
+          cartItemElement.className = 'flex justify-between items-center bg-white p-4 rounded-lg shadow-md';
+          cartItemElement.innerHTML = `
+        <div class="flex items-center">
+          <img src="${item.image_url}" alt="${item.name}" class="w-20 h-20 object-cover rounded-md">
+          <div class="ml-4">
+            <h3 class="text-lg font-semibold">${item.name}</h3>
+            <p class="text-sm text-gray-600">Brand: ${item.brand}</p> <!-- Menambahkan brand -->    
+            <p class="text-sm text-gray-600">Rp ${item.price.toLocaleString('id-ID')}</p>
+            
+          </div>
+        </div>
+        <div class="flex items-center">
+          <button class="px-3 py-1 bg-gray-200 rounded-md text-sm hover:bg-gray-300" onclick="updateQuantity(${item.id}, -1)">-</button>
+          <span class="mx-3">${item.quantity}</span>
+          <button class="px-3 py-1 bg-gray-200 rounded-md text-sm hover:bg-gray-300" onclick="updateQuantity(${item.id}, 1)">+</button>
+        </div>
+      `;
+          cartItemsContainer.appendChild(cartItemElement);
+        });
+
+        updateTotal(cartItems); // Perbarui total harga
+      }
+
+      // Fungsi untuk memperbarui jumlah produk dalam keranjang
+      // Fungsi untuk memperbarui jumlah produk dalam keranjang
+      function updateQuantity(productId, change) {
+        const cart = getCart();
+        const productIndex = cart.findIndex((item) => item.id === productId);
+        if (productIndex !== -1) {
+          cart[productIndex].quantity += change;
+          if (cart[productIndex].quantity <= 0) {
+            cart.splice(productIndex, 1); // Hapus produk jika jumlahnya 0
+          }
+          console.log('Updated cart:', cart); // Cek apakah data keranjang sudah terupdate dengan benar
+          localStorage.setItem('cart', JSON.stringify(cart));
+          renderCart(); // Render ulang keranjang setelah perubahan
+        }
+      }
+
+      // Fungsi untuk menghitung total harga keranjang
+      function updateTotal(cart) {
+        const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        document.getElementById('totalPrice').textContent = 'Rp ' + total.toLocaleString('id-ID');
+      }
+
+      // Fungsi untuk mengarahkan ke halaman checkout
+      document.getElementById('checkoutButton').addEventListener('click', () => {
+        window.location.href = 'checkout.html'; // Ganti dengan halaman checkout Anda
+      });
+
+      // Render keranjang saat halaman dimuat
+      renderCart();
+    </script>
+  </body>
+</html>

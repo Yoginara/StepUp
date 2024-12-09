@@ -2,7 +2,6 @@ package main
 
 import (
 	"be-stepup/config"
-	"be-stepup/controllers"
 	"be-stepup/routes"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -33,16 +32,11 @@ func main() {
 	}
 	defer config.DisconnectDB() // Menutup koneksi ke MongoDB ketika server dimatikan
 
-	// Inisialisasi OrderController dengan koleksi yang benar
-	orderController := &controllers.OrderController{
-		OrderCollection: config.GetCollection("orders"), // Gunakan GetCollection untuk mengakses koleksi "orders"
-	}
-
+	// Atur semua rute
+	routes.SetupRoutes(app)
+	
 	// Middleware untuk melayani file statis dari folder uploads
 	app.Static("/uploads", "./uploads")
-
-	// Mengatur rute aplikasi
-	routes.SetupRoutes(app, orderController) // Passing orderController ke SetupRoutes
 
 	// Menyiapkan channel untuk menangkap sinyal shutdown
 	c := make(chan os.Signal, 1)

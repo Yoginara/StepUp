@@ -23,7 +23,7 @@ document.getElementById('productForm').addEventListener('submit', function (e) {
       alert('Product added successfully');
       resetForm();
       // Redirect to index.html after adding the product
-      window.location.href = 'index.html'; // Change this path if needed
+      window.location.href = '../view/view-products.html'; // Change this path if needed
     })
     .catch((error) => {
       console.error('Error adding product:', error);

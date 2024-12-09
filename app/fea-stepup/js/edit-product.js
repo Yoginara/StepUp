@@ -47,7 +47,7 @@ document.getElementById('productForm').addEventListener('submit', function (e) {
     .then((response) => response.json())
     .then(() => {
       alert('Product updated successfully');
-      window.location.href = 'index.html';
+      window.location.href = '../view/view-products.html';
     })
     .catch((error) => console.error('Error updating product:', error));
 });
